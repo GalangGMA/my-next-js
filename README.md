@@ -1,36 +1,159 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vela Admin Template
 
-## Getting Started
+Modern Next.js admin dashboard template built with App Router, TypeScript, Tailwind CSS, reusable shared UI, and feature-based architecture.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Lucide React
+- Recharts
+- React Hook Form
+- Zod
+- Zustand
+
+## Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/` dashboard
+- `/customers`
+- `/messages`
+- `/users`
+- `/orders`
+- `/invoices`
+- `/tickets`
+- `/notifications`
+- `/profile`
+- `/settings`
+- `/login`
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+src/
+  app/
+    (auth)/
+    (dashboard)/
+  components/
+    forms/
+    layout/
+    navigation/
+    shared/
+  features/
+    auth/
+    customers/
+    dashboard/
+    invoices/
+    messages/
+    notifications/
+    orders/
+    profile/
+    settings/
+    tickets/
+    users/
+  repositories/
+  services/
+  stores/
+  constants/
+  lib/
+  types/
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Route files in `src/app` stay thin.
+- Domain UI lives under `src/features/<domain>/components`.
+- Domain page data lives close to the feature.
+- Repository and service layers are feature-specific when the domain is established.
+- Shared visual primitives live in `src/components/shared`.
+- Shared form primitives live in `src/components/forms`.
+- Shared UI state lives in `src/stores`.
 
-## Deploy on Vercel
+## Shared UI
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Current reusable building blocks include:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `PanelCard`
+- `MetricCard`
+- `DataTable`
+- `DataTableToolbar`
+- `DataTableSummary`
+- `PageHeader`
+- `StatusBadge`
+- `PlaceholderPage`
+- `EntityOverviewPage`
+- `OperationsTablePage`
+
+## Form System
+
+Login uses:
+
+- `react-hook-form`
+- `zod`
+- reusable fields:
+  - `FormTextField`
+  - `FormCheckboxField`
+
+Use the same pattern for future auth/settings/billing forms.
+
+## UI Store
+
+`zustand` is set up for reusable interface state.
+
+Current store:
+
+- `src/stores/ui-store.ts`
+
+Used for:
+
+- message contact detail panel open/close state
+
+## Conventions
+
+- Keep server data access outside UI components.
+- Use feature repositories/services for established domains.
+- Prefer shared UI primitives before creating page-specific markup.
+- Keep new routes inside `src/app` and new feature code inside `src/features/<domain>`.
+- Add `loading.tsx`, `error.tsx`, and `not-found.tsx` when a route needs them.
+
+## Verification
+
+```bash
+npm run lint
+npm run build
+npm run test
+```
+
+## Testing
+
+Testing is configured with Vitest following the Next.js App Router guidance.
+
+- config: `vitest.config.mts`
+- setup: `vitest.setup.ts`
+- scripts:
+  - `npm run test`
+  - `npm run test:watch`
+
+Current example coverage includes:
+
+- utility tests
+- domain service tests
+- zod validation tests
+- synchronous component tests
+
+## Recommended Next Steps
+
+- Upgrade remaining placeholder domains to feature `data/repository/service` modules
+- Add auth/session guards when backend integration starts
+- Introduce TanStack Table if column-level sorting/filtering becomes more advanced
+- Add unit/integration tests for repositories, services, and important UI flows
